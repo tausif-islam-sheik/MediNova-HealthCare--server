@@ -3,10 +3,13 @@ import AppError from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 import { IUpdateDoctorPayload } from "./doctor.interface";
 import { UserStatus } from "../../../generated/prisma/enums";
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import { Doctor, Prisma } from "../../../generated/prisma/client";
+import { doctorFilterableFields, doctorIncludeConfig, doctorSearchableFields } from "./doctor.constant";
+import { IQueryParams } from "../../interfaces/query.interface";
 
 
-
-const getAllDoctors = async () => {
+const getAllDoctors = async (query : IQueryParams) => {
   // const doctors = await prisma.doctor.findMany({
   //   include: {
   //     user: true,
@@ -18,8 +21,40 @@ const getAllDoctors = async () => {
   //   },
   // });
   // return doctors;
-};
 
+  const queryBuilder = new QueryBuilder<
+    Doctor,
+    Prisma.DoctorWhereInput,
+    Prisma.DoctorInclude
+  >(prisma.doctor, query, {
+    searchableFields: doctorSearchableFields,
+    filterableFields: doctorFilterableFields,
+  });
+
+  const result = await queryBuilder
+    .search()
+    .filter()
+    .where({
+      isDeleted: false,
+    })
+    .include({
+      user: true,
+      // specialities: true,
+      specialities: {
+        include: {
+          speciality: true,
+        },
+      },
+    })
+    .dynamicInclude(doctorIncludeConfig)
+    .paginate()
+    .sort()
+    .fields()
+    .execute();
+
+  console.log(result);
+  return result;
+};
 
 
 const getDoctorById = async (id: string) => {
@@ -52,7 +87,6 @@ const getDoctorById = async (id: string) => {
   });
   return doctor;
 };
-
 
 
 const updateDoctor = async (id: string, payload: IUpdateDoctorPayload) => {
@@ -117,7 +151,6 @@ const updateDoctor = async (id: string, payload: IUpdateDoctorPayload) => {
 };
 
 
-
 //soft delete
 const deleteDoctor = async (id: string) => {
   const isDoctorExist = await prisma.doctor.findUnique({
@@ -158,6 +191,8 @@ const deleteDoctor = async (id: string) => {
 
   return { message: "Doctor deleted successfully" };
 };
+
+
 
 export const DoctorService = {
   getAllDoctors,
