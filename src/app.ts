@@ -9,6 +9,7 @@ import path from "path";
 import { envVars } from "./app/config/env";
 import cors from "cors";
 import qs from "qs";
+import { PaymentController } from "./app/module/payment/payment.controller";
 
 const app: Application = express();
 
