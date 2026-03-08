@@ -33,12 +33,14 @@ const getMyAppointments = catchAsync(async (req: Request, res: Response) => {
 const changeAppointmentStatus = catchAsync(
   async (req: Request, res: Response) => {
     const appointmentId = req.params.id;
-    const payload = req.body;
+    // const payload = req.body;
+    const { status: appointmentStatus } = req.body;
     const user = req.user;
 
     const updatedAppointment = await AppointmentService.changeAppointmentStatus(
       appointmentId as string,
-      payload,
+      // payload,
+      appointmentStatus,
       user,
     );
     sendResponse(res, {

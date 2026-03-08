@@ -12,7 +12,7 @@ router.get("/", specialityController.getAllSpecialities);
 
 router.post(
   "/",
-  // checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   multerUpload.single("file"),
   validateRequest(SpecialityValidation.createSpecialityZodSchema),
   specialityController.createSpeciality,

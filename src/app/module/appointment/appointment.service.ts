@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import status from "http-status";
 import { v7 as uuidv7 } from "uuid";
 import { PaymentStatus, Role } from "../../../generated/prisma/enums";
@@ -132,7 +133,7 @@ const getMyAppointments = async (user: IRequestUser) => {
     },
   });
 
-  let appointments = [];
+  let appointments: any[];
 
   if (patientData) {
     appointments = await prisma.appointment.findMany({
@@ -460,8 +461,6 @@ const cancelUnpaidAppointments = async () => {
     }
   });
 };
-
-
 
 export const AppointmentService = {
   bookAppointment,

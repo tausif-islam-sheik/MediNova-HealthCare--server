@@ -5,7 +5,7 @@ export const createDoctorZodSchema = z.object({
   password: z
     .string("Password is required")
     .min(6, "Password must be at least 6 characters")
-    .max(25, "Password must be at most 25 characters"),
+    .max(30, "Password must be at most 30 characters"),
   doctor: z.object({
     name: z
       .string("Name is required and must be string")
