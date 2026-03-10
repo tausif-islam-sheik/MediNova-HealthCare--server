@@ -17,7 +17,6 @@ const getAllAdmins = catchAsync(async (req: Request, res: Response) => {
 });
 
 
-
 const getAdminById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -30,7 +29,6 @@ const getAdminById = catchAsync(async (req: Request, res: Response) => {
     data: admin,
   });
 });
-
 
 
 const updateAdmin = catchAsync(async (req: Request, res: Response) => {
@@ -48,7 +46,6 @@ const updateAdmin = catchAsync(async (req: Request, res: Response) => {
 });
 
 
-
 const deleteAdmin = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const user = req.user;
@@ -64,6 +61,31 @@ const deleteAdmin = catchAsync(async (req: Request, res: Response) => {
 });
 
 
+const changeUserStatus = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user;
+  const payload = req.body;
+  const result = await AdminService.changeUserStatus(user, payload);
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "User status changed successfully",
+    data: result,
+  });
+});
+
+
+const changeUserRole = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user;
+  const payload = req.body;
+  const result = await AdminService.changeUserRole(user, payload);
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "User role changed successfully",
+    data: result,
+  });
+});
+
 
 
 export const AdminController = {
@@ -71,4 +93,6 @@ export const AdminController = {
   updateAdmin,
   deleteAdmin,
   getAdminById,
+  changeUserStatus,
+  changeUserRole,
 };
